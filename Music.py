@@ -334,6 +334,35 @@ class Music:
             await state.songs.put(entry)
             await asyncio.sleep(15)
             await ctx.invoke(self.stop)
+            
+            
+    @commands.command(pass_context=True, no_pm=True)                
++    async def alia(self, ctx):
++        """DESPACITO 50 KILLS IN FORTNITE?!?!?"""
++        state = self.get_voice_state(ctx.message.server)
++        opts = {
++            'default_search': 'auto',
++            'quiet': True,
++        }
++
++        if state.voice is None:
++            success = await ctx.invoke(self.summon)
++            if not success:
++                return
++
++        try:
++            link = 'https://www.youtube.com/watch?v=XgZ8BrSs0gw'
++            player = await state.voice.create_ytdl_player(link, ytdl_options=opts, after=state.toggle_next)
++        except Exception as e:
++            fmt = 'An error occurred while processing this request: ```py\n{}: {}\n```'
++            await self.bot.send_message(ctx.message.channel, fmt.format(type(e).__name__, e))
++        else:
++            player.volume = 1.0
++            entry = VoiceEntry(ctx.message, player)
++            await state.songs.put(entry)
++            await asyncio.sleep(15)
++            await ctx.invoke(self.stop)
++            
 
 def setup(bot):
     bot.add_cog(Music(bot))
